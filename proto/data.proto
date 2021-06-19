@@ -1,0 +1,74 @@
+syntax = "proto3";
+package apipb;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "pkg/apipb";
+
+// Sample message
+message Sample {
+	uint64 id = 1;
+	string name = 2;
+	bytes data = 3; 
+}
+
+// SampleCreateResponse returns the ID of the newly created sample.
+message SampleCreateResponse {
+	uint64 id = 1;
+}
+
+// SampleGetRequest specifies the ID we wish to get.
+message SampleGetRequest {
+	uint64 id = 1;
+}
+
+// SampleDeleteRequest specifies the ID we wish to delete.
+message SampleDeleteRequest {
+	uint64 id = 1;
+}
+
+// SampleListResponse returns a list of samples
+message SampleListResponse {
+	repeated Sample samples = 1;
+}
+
+// Service for managing samples
+service Samples {
+	// Create new sample
+	rpc Create(Sample) returns (SampleCreateResponse) {
+		option (google.api.http) = {
+			post: "/api/v1/samples"
+            body: "*"
+		};
+	};
+
+	// Get sample by id
+	rpc Get(SampleGetRequest) returns (Sample) {
+		option (google.api.http) = {
+			get: "/api/v1/samples/{id}"
+		};
+	};
+
+	// Update sample
+	rpc Update(Sample) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			put: "/api/v1/samples/{id}"
+            body: "*"
+		};
+	};
+
+	// Delete sample by id
+	rpc Delete(SampleDeleteRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/api/v1/samples/{id}"
+		};
+	};
+
+	// List all samples
+	rpc List(google.protobuf.Empty) returns (SampleListResponse) {
+		option (google.api.http) = {
+			get: "/api/v1/samples"
+		};
+	};
+};
