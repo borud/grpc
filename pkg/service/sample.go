@@ -62,7 +62,7 @@ func (s *Service) List(ctx context.Context, req *empty.Empty) (*apipb.SampleList
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	list := make([]*apipb.Sample, len(s.data))
+	list := []*apipb.Sample{}
 	for _, v := range s.data {
 		list = append(list, v.Proto())
 	}

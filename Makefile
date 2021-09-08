@@ -1,12 +1,15 @@
 all: gen build test vet
 
-build: server
+build: server client
 
 server:
 	@cd cmd/server && go build -o ../../bin/server
 
+client:
+	@cd cmd/client && go build -o ../../bin/client
+
 gen:
-	@buf generate --path proto/data.proto
+	@buf generate
 
 vet:
 	@go vet ./...
@@ -25,9 +28,12 @@ count:
 	@echo "WITH ONLY THE FILES WE MAINTAIN"
 	@gocloc --not-match-d pkg/apipb --include-lang="Go,Protocol Buffers" .
 	
-init:
-	@go get -u github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-		github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-		google.golang.org/protobuf/cmd/protoc-gen-go \
-		google.golang.org/grpc/cmd/protoc-gen-go-grpc \
-		github.com/bufbuild/buf/cmd/buf
+dep-install:
+	@go get google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@go get google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	@go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	@go get github.com/bufbuild/buf/cmd/buf@latest
+	@go get github.com/mgechev/revive@latest
+	@buf mod update
+

@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/borud/grpc/pkg/apipb"
+	"github.com/borud/grpc/pkg/auth"
 	"github.com/borud/grpc/pkg/model"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime" // Note: make sure this is v2
 	"google.golang.org/grpc"
@@ -42,8 +43,15 @@ func (s *Service) CloseInternalClientConn() error {
 
 // Return a gRPC server instance.
 func (s *Service) GRPCServer() *grpc.Server {
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			auth.AuthInterceptor,
+			auth.LoggingServerInterceptor,
+		),
+	)
+
 	apipb.RegisterSamplesServer(grpcServer, s)
+
 	return grpcServer
 }
 
