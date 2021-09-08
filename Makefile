@@ -3,10 +3,10 @@ all: gen build test vet
 build: server client
 
 server:
-	@cd cmd/server && go build -o ../../bin/server
+	@cd cmd/$@ && go build -o ../../bin/$@
 
 client:
-	@cd cmd/client && go build -o ../../bin/client
+	@cd cmd/$@ && go build -o ../../bin/$@
 
 gen:
 	@buf generate
