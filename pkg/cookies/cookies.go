@@ -6,10 +6,21 @@ import (
 
 	"github.com/borud/grpc/pkg/apipb"
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
+)
+
+const (
+	cookieValueHeaderName  = "x-cookie-name"
+	cookieValueHeaderValue = "x-cookie-value"
 )
 
 func (s *CookieService) SetCookie(ctx context.Context, cookie *apipb.Cookie) (*empty.Empty, error) {
 	log.Printf("SetCookie '%s' = '%s'", cookie.Name, cookie.Value)
+
+	header := metadata.Pairs(cookieValueHeaderName, cookie.Name, cookieValueHeaderValue, cookie.Value)
+	grpc.SendHeader(ctx, header)
+
 	return &empty.Empty{}, nil
 }
 

@@ -55,10 +55,12 @@ func main() {
 	}()
 	log.Printf("grpc: %s", listener.Addr().String())
 
+	mux := cookieService.Mux()
+
 	// Set up web interface
 	httpServer := &http.Server{
 		Addr:    opt.HTTPListenAddr,
-		Handler: cookieService.Mux(),
+		Handler: mux,
 	}
 
 	log.Printf("http: %s", opt.HTTPListenAddr)
