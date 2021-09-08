@@ -1,11 +1,14 @@
 all: gen build test vet
 
-build: server client
+build: server client cookies
 
 server:
 	@cd cmd/$@ && go build -o ../../bin/$@
 
 client:
+	@cd cmd/$@ && go build -o ../../bin/$@
+
+cookies:
 	@cd cmd/$@ && go build -o ../../bin/$@
 
 gen:

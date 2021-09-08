@@ -1,0 +1,41 @@
+syntax = "proto3";
+package apipb;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "pkg/apipb";
+
+message Cookie {
+	string name = 1;
+	string value = 2;
+}
+
+message GetCookieRequest {
+	string name = 1;
+}
+
+message DeleteCookieRequest {
+	string name = 1;
+}
+
+service Cookies {
+	rpc SetCookie(Cookie) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/api/v1/cookies"
+            body: "*"
+		};
+	};
+
+	rpc GetCookie(GetCookieRequest) returns (Cookie) {
+		option (google.api.http) = {
+			get: "/api/v1/cookies/{name}"
+		};
+	};
+
+	rpc DeleteCookie(DeleteCookieRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/api/v1/cookies/{name}"
+		};
+	};
+}
